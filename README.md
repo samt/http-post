@@ -1,6 +1,6 @@
 # http-post
 
-This utility extends the funcationlity of the 'http' library in stock node.js.
+This utility extends the functionality of the 'http' library in stock node.js.
 It returns a post request function in a very similar way to node's [http.get()](http://nodejs.org/api/http.html#http_http_get_options_callback).
 
 In the same style as `http.get()`, this function calls `req.end()` automatically
@@ -47,7 +47,23 @@ Pass it an empty array if you do not need to send any form data.
 
 ### files
 
-TBA
+This param is another JavaScript object that can contain many files to be posted
+
+	var files = [
+		{
+			param: "img",
+			path: "./assets/mycoolimage.png"
+		},
+		{
+			param: "somefile",
+			name: "mydata.txt",
+			path: "C:\\Users\\Sam\\Documents\\asdf.txt"
+		}
+	]
+
+You may chose to specify an optional `name` in your array. It will override the
+file name as it exists in the filesystem and name it the name you specified for
+the request.
 
 ### callback
 
@@ -61,12 +77,12 @@ Returns an instance of [http.ClientRequest](http://nodejs.org/api/http.html#http
 
 ## Examples
 
-`Setting up`
+Setting up
 
 	var http = require('http');
 	http.post = require('http-post');
 
-`Posting data`
+Posting data
 
 	http.post('http://localhost/postscript.php', { name: 'Sam', email: 'sam@emberlabs.org' }, function(res){
 		response.setEncoding('utf8');

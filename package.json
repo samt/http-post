@@ -1,6 +1,6 @@
 {
 	"name": "http-post",
-	"description": "Shortcut method similar to http.get() for HTTP POST request with support for data and files",
+	"description": "Shortcut method similar to http.get() for HTTP POST requests with support for data and files",
 	"author": {
 		"name": "Sam Thompson",
 		"email": "sam@emberlabs.org"
