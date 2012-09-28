@@ -26,12 +26,11 @@ module.exports = function(options, data, files, fn) {
 
 	// If we have files, we have to chose multipart, otherweise we just stringify the query 
 	if (files.length) {
-		//var boundary = '-----' + Math.random();
-		var boundary = '------WebKitFormBoundary7C9feEVvdkuBaezA';
+		var boundary = '-----np' + Math.random();
 		var toWrite = [];
 
 		for(var k in data) {
-			toWrite.push(boundary + endl);
+			toWrite.push('--' + boundary + endl);
 			toWrite.push('Content-Disposition: form-data; name="' + k + '"' + endl);
 			toWrite.push(endl);
 			toWrite.push(data[k] + endl);
@@ -47,16 +46,16 @@ module.exports = function(options, data, files, fn) {
 				stats = fs.statSync(files[k].path);
 				files[k].length = stats.size;
 
-				toWrite.push(boundary + endl);
+				toWrite.push('--' + boundary + endl);
 				toWrite.push('Content-Disposition: form-data; name="' + files[k].param + '"; filename="' + name + '"' + endl);
-				toWrite.push('Content-Type: image/png');
+				//toWrite.push('Content-Type: image/png');
 				toWrite.push(endl);
 				toWrite.push(files[k]);
 			}
 		}
 
 		// The final multipart terminator
-		toWrite.push(boundary + '--' + endl);
+		toWrite.push('--' + boundary + '--' + endl);
 
 		// Now that toWrite is filled... we need to determine the size
 		for(var k in toWrite) {
@@ -84,17 +83,13 @@ module.exports = function(options, data, files, fn) {
 
 	// Multipart and form-urlencded work slightly differnetly for sending
 	if (files.length) {
-		var fp, buf, n;
 		for(var k in toWrite) {
 			if (typeof(toWrite[k]) == 'string') {
 				req.write(toWrite[k]);
-//				process.stdout.write(toWrite[k]);
 			}
 			else {
-//				process.stdout.write('FILE: ' + toWrite[k]);
-//				process.stdout.write(endl);
 				// @todo make it work better for larger files
-				req.write(fs.readFileSync(toWrite[k].path));
+				req.write(fs.readFileSync(toWrite[k].path, 'binary'));
 				req.write(endl);
 			}
 		}
