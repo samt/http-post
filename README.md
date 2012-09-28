@@ -1,7 +1,7 @@
 # http-post
 
-This utility extends the functionality of the 'http' library in stock node.js.
-It returns a post request function in a very similar way to node's [http.get()](http://nodejs.org/api/http.html#http_http_get_options_callback).
+This utility extends the functionality of the `http` library in stock node.js
+providing a post request function in the same fashion of node's [http.get()](http://nodejs.org/api/http.html#http_http_get_options_callback).
 
 In the same style as `http.get()`, this function calls `req.end()` automatically
 
@@ -9,7 +9,7 @@ In the same style as `http.get()`, this function calls `req.end()` automatically
 
 	npm install http-post
 
-## Usage
+## Usage and parameters
 
 	http-post(options, data[, files[, callback]])
 
@@ -22,7 +22,7 @@ or
 Options are the same as the ones for [http.request()](http://nodejs.org/api/http.html#http_http_request_options_callback)
 except `method` will always be forced to `POST`. Note that `options` can be
 replaced with the full URI of the request similar to `http.get` allowing for
-even greater flexiblity in your post requests.
+even greater flexibility in your post requests.
 
 ### data
 
