@@ -91,6 +91,58 @@ Posting data
 		});
 	});
 
+Posting a file
+
+	var files = {
+		{
+			param: "file",
+			path: "./assets/img/something.png"
+		}
+	};
+	
+	http.post('http://localhost/postscript.php', [], files, function(res){
+		//...
+	});
+
+Posting multiple files
+
+	var files = {
+		{
+			param: "file",
+			path: "./assets/img/something.png"
+		},
+		{
+			param: "junk",
+			path: "/home/sam/hello.txt"
+		}
+	};
+	
+	http.post('http://localhost/postscript.php', [], files, function(res){
+		// ...
+	});
+
+Posting data and files
+
+	var data = {
+		name: 'Sam',
+		drink: 'coffee'
+	};
+	
+	var files = {
+		{
+			param: "file",
+			path: "./assets/img/something.png"
+		},
+		{
+			param: "junk",
+			path: "/home/sam/hello.txt"
+		}
+	};
+	
+	http.post('http://localhost/postscript.php', data, files, function(res){
+		// ...
+	});
+
 ## License
 
 [The MIT License](http://opensource.org/licenses/mit-license.php)
