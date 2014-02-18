@@ -38,20 +38,29 @@ module.exports = function(options, data, files, fn) {
 
 		var name = '', stats;
 		for (var k in files) {
-			if (fs.existsSync(files[k].path)) {
-				// Determine the name
-				name = (typeof(files[k].name) == 'string') ? files[k].name : files[k].path.replace(/\\/g,'/').replace( /.*\//, '' );
+			// Determine the name
+			name = (typeof(files[k].name) == 'string') ? files[k].name : files[k].path.replace(/\\/g,'/').replace( /.*\//, '' );
 
+			// you can either read your data from .path, or supply it in .data
+			if (files[k].data) {
+				files[k].length = files[k].data.length;
+			}
+			else if (fs.existsSync(files[k].path)) {
 				// Determine the size and store it in our files area
 				stats = fs.statSync(files[k].path);
 				files[k].length = stats.size;
-
-				toWrite.push('--' + boundary + endl);
-				toWrite.push('Content-Disposition: form-data; name="' + files[k].param + '"; filename="' + name + '"' + endl);
-				//toWrite.push('Content-Type: image/png');
-				toWrite.push(endl);
-				toWrite.push(files[k]);
 			}
+			/* @todo should we throw a error, for something that clearly can be a error?
+			else {
+				throw "File '" + name + "' needs to specify a 'data' or 'path' property";
+			}
+			*/;
+
+			toWrite.push('--' + boundary + endl);
+			toWrite.push('Content-Disposition: form-data; name="' + files[k].param + '"; filename="' + name + '"' + endl);
+			//toWrite.push('Content-Type: image/png');
+			toWrite.push(endl);
+			toWrite.push(files[k]);
 		}
 
 		// The final multipart terminator
@@ -72,10 +81,11 @@ module.exports = function(options, data, files, fn) {
 	}
 
 	options.method = 'POST';
-	options.headers = {
-		'Content-Type': contentType,
-		'Content-Length': length
-	};
+	// allow us to pass extra headers, or create it if it does not exist
+	if (!options.headers)
+		options.headers = {};
+	options.headers['Content-Type'] = contentType;
+	options.headers['Content-Length'] = length;
 
 	var req = require('http').request(options, function(responce) {
 		fn(responce);
@@ -86,6 +96,10 @@ module.exports = function(options, data, files, fn) {
 		for(var k in toWrite) {
 			if (typeof(toWrite[k]) == 'string') {
 				req.write(toWrite[k]);
+			}
+			else if (toWrite[k].data) {
+				req.write(toWrite[k].data);
+				req.write(endl);
 			}
 			else {
 				// @todo make it work better for larger files
