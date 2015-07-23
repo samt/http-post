@@ -85,7 +85,7 @@ Setting up
 Posting data
 
 	http.post('http://localhost/postscript.php', { name: 'Sam', email: 'sam@emberlabs.org' }, function(res){
-		response.setEncoding('utf8');
+		res.setEncoding('utf8');
 		res.on('data', function(chunk) {
 			console.log(chunk);
 		});
