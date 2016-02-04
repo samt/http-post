@@ -66,17 +66,14 @@ module.exports = function(options, data, files, fn) {
 	}
 	else {
 		data = require('querystring').stringify(data);
-
 		length = data.length;
 		contentType = 'application/x-www-form-urlencoded';
 	}
-
 	options.method = 'POST';
-	options.headers = {
-		'Content-Type': contentType,
-		'Content-Length': length
-	};
-
+	options.headers = options.headers || {};
+	options.headers['Content-Length'] = length;
+	options.headers['Content-Type'] = contentType;
+		
 	var req = require('http').request(options, function(responce) {
 		fn(responce);
 	});
