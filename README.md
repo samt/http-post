@@ -93,12 +93,12 @@ Posting data
 
 Posting a file
 
-	var files = {
+	var files = [
 		{
 			param: "file",
 			path: "./assets/img/something.png"
 		}
-	};
+	];
 	
 	http.post('http://localhost/postscript.php', [], files, function(res){
 		//...
@@ -106,7 +106,7 @@ Posting a file
 
 Posting multiple files
 
-	var files = {
+	var files = [
 		{
 			param: "file",
 			path: "./assets/img/something.png"
@@ -115,7 +115,7 @@ Posting multiple files
 			param: "junk",
 			path: "/home/sam/hello.txt"
 		}
-	};
+	];
 	
 	http.post('http://localhost/postscript.php', [], files, function(res){
 		// ...
@@ -128,7 +128,7 @@ Posting data and files
 		drink: 'coffee'
 	};
 	
-	var files = {
+	var files = [
 		{
 			param: "file",
 			path: "./assets/img/something.png"
@@ -137,7 +137,7 @@ Posting data and files
 			param: "junk",
 			path: "/home/sam/hello.txt"
 		}
-	};
+	];
 	
 	http.post('http://localhost/postscript.php', data, files, function(res){
 		// ...
