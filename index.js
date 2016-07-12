@@ -83,16 +83,40 @@ module.exports = function(options, data, files, fn) {
 
 	// Multipart and form-urlencded work slightly differnetly for sending
 	if (files.length) {
-		for(var k in toWrite) {
-			if (typeof(toWrite[k]) == 'string') {
-				req.write(toWrite[k]);
+		var indexToWrite = 0;
+		var lengthToWrite = toWrite.length;
+
+		function writeAsyncBody(req, toWrite, indexToWrite) {
+			if(lengthToWrite == indexToWrite) {
+				req.end();
+				return;
+			}
+
+			if (typeof(toWrite[indexToWrite]) == 'string') {
+				req.write(toWrite[indexToWrite]);
+				indexToWrite++;
+				writeAsyncBody(req, toWrite, indexToWrite);
 			}
 			else {
-				// @todo make it work better for larger files
-				req.write(fs.readFileSync(toWrite[k].path, 'binary'));
-				req.write(endl);
+				var stream = fs.createReadStream(toWrite[indexToWrite].path);
+
+				stream.on('error', function(error) {
+				  throw new Error(error.message);
+				});
+
+				stream.on('data', function(data) {
+				  req.write(data);
+				});
+
+				stream.on('end', function() {
+				  req.write(endl);
+				  indexToWrite++;
+				  writeAsyncBody(req, toWrite, indexToWrite);
+				});
 			}
 		}
+
+		writeAsyncBody(req, toWrite, indexToWrite);
 	}
 	else {
 		req.write(data);
